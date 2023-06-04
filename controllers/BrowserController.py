@@ -69,10 +69,18 @@ Practiced effective time management to maintain a consistent schedule and suppor
         self.myEducation = [dict(
             title = 'Boise CodeWorks',
             degree = 'Other'
+        )]
+        self.myLanguages = [dict(
+            language = 'English',
+            fluent = True,
+            Overall = '5 - Complete Mastery'
         ),dict(
-            title = 'Boise CodeWorks2',
-            degree = 'Other'
+            language = 'English',
+            fluent = True,
+            Overall = '5 - Complete Mastery'
         ),]
+    
+    
     def login(self):
         self.driver.get('https://bah.wd1.myworkdayjobs.com/en-US/BAH_Jobs/login')
         email_element = self.wait.until(EC.presence_of_element_located((By.ID, 'input-4')))
@@ -107,6 +115,7 @@ Practiced effective time management to maintain a consistent schedule and suppor
         time.sleep(2)
         self.fillExperience()
         self.fillEducation()
+        self.fillLanguages()
         time.sleep(30)
 
 
@@ -153,14 +162,12 @@ Practiced effective time management to maintain a consistent schedule and suppor
             phone_field.send_keys('2085594366')
 
     def NextForm(self):
-        print('pageDone')
         continueButton = self.wait.until(EC.presence_of_element_located((By.XPATH, '//button[@data-automation-id="bottom-navigation-next-button"]')))
         continueButton.click()
         time.sleep(1)
 
     def fillExperience(self):
         job_title_elements = self.driver.find_elements(By.XPATH, '//input[@data-automation-id="jobTitle"]')
-        print(len(job_title_elements), len(self.MyExperience))
         if len(job_title_elements) != len(self.MyExperience):
             experienceDiffrenceNum = (len(self.MyExperience) - len(job_title_elements))
             for x in range(experienceDiffrenceNum):
@@ -205,7 +212,6 @@ Practiced effective time management to maintain a consistent schedule and suppor
     
     def fillEducation(self):
         school_title_elements = self.driver.find_elements(By.XPATH, '//input[@data-automation-id="school"]')
-        print(len(school_title_elements), len(self.myEducation))
         if len(school_title_elements) != len(self.myEducation):
             educationDifferenceNum = (len(self.myEducation) - len(school_title_elements))
             for x in range(educationDifferenceNum):
@@ -225,6 +231,29 @@ Practiced effective time management to maintain a consistent schedule and suppor
             time.sleep(.5)
             degree_option = self.wait.until(EC.presence_of_element_located((By.XPATH, f"//li[@role='option']/div[text()='{res}']")))
             degree_option.click()
+
+
+    def fillLanguages(self):
+        try:
+            languagesAddButton = self.driver.find_element(By.XPATH, '//button[@aria-label="Add Languages"]')
+            languagesAddButton.click()
+        except:
+            pass
+
+        try:
+            languageDropdownList = self.wait.until(EC.presence_of_all_elements_located(((By.XPATH, '//button[@aria-label="Language select one required"]'))))
+
+            if len(languageDropdownList) != len(self.myLanguages):
+                languageDifferenceNumber = (len(self.myLanguages) - len(languageDropdownList))
+                for x in range(languageDifferenceNumber):
+                    addAnotherLanguageButton = self.wait.until(EC.element_to_be_clickable((By.XPATH, '//button[@aria-label="Add Another Languages"]')))
+                    self.driver.execute_script("arguments[0].click();", addAnotherLanguageButton)
+            time.sleep(.5)
+            languageDropdownList = self.wait.until(EC.presence_of_all_elements_located(((By.XPATH, '//button[@aria-label="Language select one required"]'))))
+        except:
+            pass
+
+    
 
 
 
